@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Disease Detection</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f2f5f0;
+            padding: 30px;
+        }
+        .rounded-pill {
+            border-radius: 50rem !important;
+        }
+        .h-100 {
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row g-4">
+
+        <!-- Card 1 -->
+        <div class="col-md-4 mx-auto">
+            <div class="p-5 bg-white shadow rounded-lg h-100">
+                <h5><b>Why is it necessary to detect disease in plants?</b></h5>
+                <p>
+                    Plant diseases affect growth and productivity. Early and accurate detection helps avoid losses,
+                    reduces costs, and ensures healthier crops. Proper diagnosis prevents waste of time, money,
+                    and unnecessary damage.
+                </p>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="col-md-4 mx-auto">
+            <div class="p-5 bg-white shadow rounded-lg h-100 text-center">
+
+                <img src="https://www.pngjoy.com/pngl/250/4840262_plants-png-indoors-tropical-plant-png-hd-png.png"
+                    height="300" width="200" class="d-block mx-auto mb-4 rounded-pill" alt="Plant">
+
+                <form action="/submit" method="POST" enctype="multipart/form-data">
+
+                    <div class="custom-file overflow-hidden mb-4 text-center">
+
+                        <!-- Choose File Icon Button -->
+                        <label for="actual-btn" style="cursor:pointer; margin-right:10px;"
+                            class="btn btn-success btn-sm">
+                            <i class="bi bi-upload"></i> Choose File
+                        </label>
+                        <input type="file" id="actual-btn" hidden name="image" />
+
+                        <!-- Camera Icon Button -->
+                        <label id="camera-btn" style="cursor:pointer;"
+                            class="btn btn-outline-success btn-sm">
+                            <i class="bi bi-camera-fill"></i> Open Camera
+                        </label>
+
+                        <br><br>
+                        <span id="file-chosen">No file chosen</span>
+                    </div>
+
+                    <!-- Camera Feed -->
+                    <div id="camera-container" style="display:none;">
+                        <video id="camera-feed" width="320" height="240" autoplay></video>
+                        <button type="button" id="capture-btn" class="btn btn-success btn-sm mt-2">Capture Photo</button>
+                    </div>
+
+                    <!-- Preview -->
+                    <img id="preview" src="#" alt="Camera Photo Preview"
+                        style="display:none; max-width:100%; margin-top:10px;" />
+
+                    <h6 class="text-center mb-4 text-muted">
+                        Upload your plant leaf image and let AI detect disease.
+                    </h6>
+
+                    <button type="submit" class="btn btn-outline-success">Submit</button>
+
+                </form>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="col-md-4 mx-auto">
+            <div class="p-5 bg-white shadow rounded-lg h-100">
+                <h4 class="mb-3" style="font-weight:700; color:#045404;">
+                    🌿 Prevent Plant Disease — Follow These Steps:
+                </h4>
+
+                <ol style="line-height:1.85; font-size:15px;">
+                    <li>Keep plants and surroundings clean.</li>
+                    <li>Use neem oil spray to stop insects and diseases.</li>
+                    <li>Inspect plants before bringing them home.</li>
+                    <li>Let the soil warm before planting.</li>
+                    <li>Rotate crops in your garden.</li>
+                    <li>Give plants good air circulation.</li>
+                    <li>Remove infected leaves or stems.</li>
+                    <li>Use banana peel to make plants strong.</li>
+                </ol>
+
+                <a target="_blank" href="https://www.thespruce.com/prevent-plant-diseases-in-your-garden-2539511">
+                    <button type="button" class="btn btn-outline-success mt-2">More Info</button>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Bootstrap 5 JS + Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Display chosen file name
+    const actualBtn = document.getElementById('actual-btn');
+    const fileChosen = document.getElementById('file-chosen');
+    actualBtn.addEventListener('change', function() {
+        if(this.files.length > 0){
+            fileChosen.textContent = this.files[0].name;
+        } else {
+            fileChosen.textContent = "No file chosen";
+        }
+    });
+
+    // Camera functionality
+    const cameraBtn = document.getElementById('camera-btn');
+    const cameraContainer = document.getElementById('camera-container');
+    const cameraFeed = document.getElementById('camera-feed');
+    const captureBtn = document.getElementById('capture-btn');
+    const preview = document.getElementById('preview');
+
+    let stream;
+
+    cameraBtn.addEventListener('click', async () => {
+        cameraContainer.style.display = 'block';
+        try {
+            stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            cameraFeed.srcObject = stream;
+        } catch (err) {
+            alert("Camera not accessible: " + err);
+        }
+    });
+
+    captureBtn.addEventListener('click', () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = cameraFeed.videoWidth;
+        canvas.height = cameraFeed.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(cameraFeed, 0, 0, canvas.width, canvas.height);
+        preview.src = canvas.toDataURL('image/png');
+        preview.style.display = 'block';
+    });
+</script>
+
+</body>
+</html>
